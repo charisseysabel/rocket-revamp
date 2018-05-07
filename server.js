@@ -52,6 +52,12 @@ router
             if (err) res.send(err);
             res.json({ message: 'Expense added!' });
         });
+    })
+    .delete(function(req, res) {
+        Expense.remove({ _id: req.body['_id'] }, function(err) {
+            if (err) res.send(err);
+            res.json({ message: 'item has been deleted successfully!' });
+        });
     });
 
 app.use('/api', router);
