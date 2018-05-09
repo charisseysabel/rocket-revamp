@@ -15,7 +15,7 @@ class Form extends Component {
         this.handleOnSubmit = this.handleOnSubmit.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
-        this.handleAccountChange = this.handleCategoryChange.bind(this);
+        this.handleAccountChange = this.handleAccountChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
     }
 

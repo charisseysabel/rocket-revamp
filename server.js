@@ -47,6 +47,7 @@ router
         expense.category = req.body.category;
         expense.account = req.body.account;
         expense.amount = req.body.amount;
+        expense.category = req.body.category;
 
         expense.save(function(err) {
             if (err) res.send(err);
