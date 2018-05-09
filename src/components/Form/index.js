@@ -6,6 +6,7 @@ const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
 
 class Form extends Component {
+export default class Form extends Component {
     constructor() {
         super();
         this.state = {
@@ -109,7 +110,7 @@ class Form extends Component {
     }
 }
 
-function Input({ type, label, name, value, inputOnChangeHandler }) {
+export function Input({ type, label, name, value, inputOnChangeHandler }) {
     return (
         <Fragment>
             <label htmlFor={name}>{label}</label>
@@ -118,10 +119,10 @@ function Input({ type, label, name, value, inputOnChangeHandler }) {
     );
 }
 
-function Select({ label, options, selectOnChangeHandler, selected }) {
+export function Select({ label, options, selectOnChangeHandler, selected }) {
     return (
         <Fragment>
-            <label htmlFor="category">Category</label>
+            <label htmlFor={label}>{label}</label>
             <select onChange={selectOnChangeHandler}>
                 {map(
                     value => (
@@ -135,5 +136,3 @@ function Select({ label, options, selectOnChangeHandler, selected }) {
         </Fragment>
     );
 }
-
-export default Form;

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { map } from 'lodash/fp';
 import axios from 'axios';
+import { Input, Select } from '../Form';
 
 const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
@@ -77,32 +78,40 @@ export default class Table extends Component {
                     <div>
                         <form>
                             <div>
-                                <label htmlFor="transactionName">Name</label>
-                                <input
+                                <Input
                                     type="text"
+                                    label="Name"
                                     name="transactionName"
-                                    id="transactionName"
-                                    value={this.state.itemToEdit.name}
+                                    value={this.state.itemToEdit.name || ''}
+                                    inputOnChangeHandler={() => undefined}
                                 />
                             </div>
 
                             <div>
-                                <label htmlFor="category">Category</label>
-                                <Select values={CATEGORY_OPTIONS} selected={this.state.itemToEdit.category} />
+                                <Select
+                                    label="Category"
+                                    options={CATEGORY_OPTIONS}
+                                    selected={this.state.itemToEdit.category || ''}
+                                    selectOnChangeHandler={() => undefined}
+                                />
                             </div>
 
                             <div>
-                                <label htmlFor="account">Account</label>
-                                <Select values={ACCOUNT_OPTIONS} selected={this.state.itemToEdit.account} />
+                                <Select
+                                    label="Account"
+                                    options={ACCOUNT_OPTIONS}
+                                    selected={this.state.itemToEdit.account || ''}
+                                    selectOnChangeHandler={() => undefined}
+                                />
                             </div>
 
                             <div>
-                                <label htmlFor="transactionAmount">Amount</label>
-                                <input
+                                <Input
                                     type="text"
+                                    label="Amount"
                                     name="transactionAmount"
-                                    id="transactionAmount"
-                                    value={this.state.itemToEdit.amount}
+                                    value={this.state.itemToEdit.amount || ''}
+                                    inputOnChangeHandler={() => undefined}
                                 />
                             </div>
 
@@ -116,18 +125,3 @@ export default class Table extends Component {
         );
     }
 }
-
-const Select = ({ values, selected }) => {
-    return (
-        <select value={selected}>
-            {map(
-                value => (
-                    <option value={value} key={value}>
-                        {value}
-                    </option>
-                ),
-                values
-            )}
-        </select>
-    );
-};
