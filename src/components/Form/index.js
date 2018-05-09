@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { map } from 'lodash/fp';
 import axios, { post } from 'axios';
 
+const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
+const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
 
 class Form extends Component {
     constructor() {
@@ -63,44 +66,37 @@ class Form extends Component {
             <div>
                 <form onSubmit={e => this.handleOnSubmit(e)}>
                     <div>
-                        <label htmlFor="transactionName">Name</label>
-                        <input
+                        <Input
                             type="text"
+                            label="Name"
                             name="transactionName"
-                            id="transactionName"
                             value={name}
-                            onChange={e => this.handleNameChange(e)}
+                            inputOnChangeHandler={this.handleNameChange}
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="category">Category</label>
-                        <select onChange={e => this.handleCategoryChange(e)}>
-                            <option value="none">None</option>
-                            <option value="grocery">Groceries</option>
-                            <option value="auto">Auto</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="transportation">Transportation</option>
-                        </select>
+                        <Select
+                            label="category"
+                            options={CATEGORY_OPTIONS}
+                            selectOnChangeHandler={this.handleCategoryChange}
+                        />
                     </div>
 
                     <div>
-                        <label htmlFor="account">Account</label>
-                        <select onChange={e => this.handleAccountChange(e)}>
-                            <option value="none">None</option>
-                            <option value="cash">Cash</option>
-                            <option value="checkingAccount">Checking Account</option>
-                            <option value="credit">Credit</option>
-                        </select>
+                        <Select
+                            label="account"
+                            options={ACCOUNT_OPTIONS}
+                            selectOnChangeHandler={this.handleAccountChange}
+                        />
                     </div>
 
                     <div>
-                        <label htmlFor="transactionAmount">Amount</label>
-                        <input
+                        <Input
                             type="text"
+                            label="Amount"
                             name="transactionAmount"
-                            id="transactionAmount"
-                            onChange={e => this.handleAmountChange(e)}
+                            inputOnChangeHandler={this.handleAmountChange}
                         />
                     </div>
 
@@ -111,6 +107,33 @@ class Form extends Component {
             </div>
         );
     }
+}
+
+function Input({ type, label, name, value, inputOnChangeHandler }) {
+    return (
+        <Fragment>
+            <label htmlFor={name}>{label}</label>
+            <input type={type} name={name} id={name} value={value} onChange={inputOnChangeHandler} />
+        </Fragment>
+    );
+}
+
+function Select({ label, options, selectOnChangeHandler, selected }) {
+    return (
+        <Fragment>
+            <label htmlFor="category">Category</label>
+            <select onChange={selectOnChangeHandler}>
+                {map(
+                    value => (
+                        <option value={value} key={value}>
+                            {value}
+                        </option>
+                    ),
+                    options
+                )}
+            </select>
+        </Fragment>
+    );
 }
 
 export default Form;
