@@ -18,7 +18,8 @@ export default class Table extends Component {
     }
 
     componentDidMount() {
-        axios.get(URL)
+        axios
+            .get(URL)
             .then(res => {
                 this.setState({
                     data: [...res.data],
