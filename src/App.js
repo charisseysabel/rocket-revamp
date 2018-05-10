@@ -3,6 +3,13 @@ import React, { Component } from 'react';
 import Form from './components/Form';
 import Table from './components/Table';
 
+let data = {
+    name: '',
+    category: 'none',
+    account: 'none',
+    amount: '',
+};
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -11,7 +18,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Form />
+                <Form data={data} />
                 <Table />
             </div>
         );

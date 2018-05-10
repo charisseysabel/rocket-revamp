@@ -5,16 +5,10 @@ import axios, { post } from 'axios';
 const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
 
-class Form extends Component {
 export default class Form extends Component {
-    constructor() {
-        super();
-        this.state = {
-            name: '',
-            category: 'none',
-            account: 'none',
-            amount: '',
-        };
+    constructor(props) {
+        super(props);
+        this.state = { ...props.data };
 
         this.handleOnSubmit = this.handleOnSubmit.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
@@ -71,8 +65,8 @@ export default class Form extends Component {
                             type="text"
                             label="Name"
                             name="transactionName"
-                            value={name}
-                            inputOnChangeHandler={this.handleNameChange}
+                            value={name || ''}
+                            onChange={e => this.handleNameChange(e)}
                         />
                     </div>
 
@@ -80,6 +74,7 @@ export default class Form extends Component {
                         <Select
                             label="category"
                             options={CATEGORY_OPTIONS}
+                            value={category}
                             selectOnChangeHandler={this.handleCategoryChange}
                         />
                     </div>
@@ -88,6 +83,7 @@ export default class Form extends Component {
                         <Select
                             label="account"
                             options={ACCOUNT_OPTIONS}
+                            value={account}
                             selectOnChangeHandler={this.handleAccountChange}
                         />
                     </div>
@@ -97,7 +93,8 @@ export default class Form extends Component {
                             type="text"
                             label="Amount"
                             name="transactionAmount"
-                            inputOnChangeHandler={this.handleAmountChange}
+                            value={amount || ''}
+                            onChange={e => this.handleAmountChange(e)}
                         />
                     </div>
 
@@ -110,20 +107,20 @@ export default class Form extends Component {
     }
 }
 
-export function Input({ type, label, name, value, inputOnChangeHandler }) {
+export function Input({ type, name, label, onChange, value }) {
     return (
         <Fragment>
             <label htmlFor={name}>{label}</label>
-            <input type={type} name={name} id={name} value={value} onChange={inputOnChangeHandler} />
+            <input type={type} name={name} id={name} value={value} onChange={onChange} />
         </Fragment>
     );
 }
 
-export function Select({ label, options, selectOnChangeHandler, selected }) {
+export function Select({ label, options, value, selectOnChangeHandler, selected }) {
     return (
         <Fragment>
             <label htmlFor={label}>{label}</label>
-            <select onChange={selectOnChangeHandler}>
+            <select value={value} onChange={selectOnChangeHandler}>
                 {map(
                     value => (
                         <option value={value} key={value}>
