@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { map } from 'lodash/fp';
+import { map, sortBy, isEqual } from 'lodash/fp';
 import axios from 'axios';
 import Form, { Input, Select } from '../Form';
 
@@ -11,19 +11,26 @@ export default class Table extends Component {
         super(props);
         this.state = {
             data: [],
+            total: 0,
             itemToEdit: undefined,
         };
 
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
         this.handleEditItem = this.handleEditItem.bind(this);
+        this.handleSortByName = this.handleSortByName.bind(this);
     }
 
     componentDidMount() {
         axios
             .get(URL)
             .then(res => {
+                const total = res.data.reduce(function(acc, curr) {
+                    return acc + curr.amount;
+                }, 0);
+
                 this.setState({
                     data: [...res.data],
+                    total,
                 });
             })
             .catch(err => {
@@ -48,6 +55,23 @@ export default class Table extends Component {
         });
     }
 
+    handleSortByName(e, type) {
+        const sorted = sortBy([{ type }], this.state.data);
+
+        if (isEqual(sorted, this.state.data)) {
+            console.log('yes');
+            this.setState({
+                data: sorted.reverse(),
+            });
+        } else {
+            this.setState({
+                data: sorted,
+            });
+        }
+
+        e.preventDefault();
+    }
+
     render() {
         if (this.state.data.length === 0) {
             return <div>Loading...</div>;
@@ -55,6 +79,15 @@ export default class Table extends Component {
 
         return (
             <div>
+                <div>
+                    <b>Total: </b> {this.state.total}
+                </div>
+
+                <button onClick={e => this.handleSortByName(e, 'name')}>Sort by name</button>
+                <button onClick={e => this.handleSortByName(e, 'category')}>Sort by category</button>
+                <button onClick={e => this.handleSortByName(e, 'account')}>Sort by account</button>
+                <button onClick={e => this.handleSortByName(e, 'amount')}>Sort by amount</button>
+
                 <table>
                     <tbody>
                         {this.state.data.map(item => {
