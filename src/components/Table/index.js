@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { map } from 'lodash/fp';
 import axios from 'axios';
-import { Input, Select } from '../Form';
+import Form, { Input, Select } from '../Form';
 
 const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
@@ -11,7 +11,7 @@ export default class Table extends Component {
         super(props);
         this.state = {
             data: [],
-            itemToEdit: {},
+            itemToEdit: undefined,
         };
 
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
@@ -74,53 +74,7 @@ export default class Table extends Component {
                     </tbody>
                 </table>
 
-                {this.state.itemToEdit.name != undefined ? (
-                    <div>
-                        <form>
-                            <div>
-                                <Input
-                                    type="text"
-                                    label="Name"
-                                    name="transactionName"
-                                    value={this.state.itemToEdit.name || ''}
-                                    inputOnChangeHandler={() => undefined}
-                                />
-                            </div>
-
-                            <div>
-                                <Select
-                                    label="Category"
-                                    options={CATEGORY_OPTIONS}
-                                    selected={this.state.itemToEdit.category || ''}
-                                    selectOnChangeHandler={() => undefined}
-                                />
-                            </div>
-
-                            <div>
-                                <Select
-                                    label="Account"
-                                    options={ACCOUNT_OPTIONS}
-                                    selected={this.state.itemToEdit.account || ''}
-                                    selectOnChangeHandler={() => undefined}
-                                />
-                            </div>
-
-                            <div>
-                                <Input
-                                    type="text"
-                                    label="Amount"
-                                    name="transactionAmount"
-                                    value={this.state.itemToEdit.amount || ''}
-                                    inputOnChangeHandler={() => undefined}
-                                />
-                            </div>
-
-                            <button type="submit" onSubmit={e => this.handleOnSubmit(e)}>
-                                Submit
-                            </button>
-                        </form>
-                    </div>
-                ) : null}
+                {this.state.itemToEdit != undefined ? <Form data={{ ...this.state.itemToEdit }} /> : null}
             </div>
         );
     }
