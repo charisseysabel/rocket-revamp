@@ -42,16 +42,25 @@ router
         });
     })
     .post(function(req, res) {
-        var expense = new Expense();
-        expense.name = req.body.name;
-        expense.category = req.body.category;
-        expense.account = req.body.account;
-        expense.amount = req.body.amount;
-        expense.category = req.body.category;
+        Expense.findById(req.body['_id'], function(err, expense) {
+            if (expense != undefined) {
+                const { name, category, account, amount } = req.body;
+                expense.update({ name, category, account, amount }, function(err) {
+                    if (err) console.log(err);
+                    console.log('Successfully updated!');
+                });
+            } else {
+                var expense = new Expense();
+                expense.name = req.body.name;
+                expense.category = req.body.category;
+                expense.account = req.body.account;
+                expense.amount = req.body.amount;
 
-        expense.save(function(err) {
-            if (err) res.send(err);
-            res.json({ message: 'Expense added!' });
+                expense.save(function(err) {
+                    if (err) res.send(err);
+                    res.json({ message: 'Expense added!' });
+                });
+            }
         });
     })
     .delete(function(req, res) {
