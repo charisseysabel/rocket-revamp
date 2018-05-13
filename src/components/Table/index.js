@@ -17,7 +17,7 @@ export default class Table extends Component {
 
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
         this.handleEditItem = this.handleEditItem.bind(this);
-        this.handleSortByName = this.handleSortByName.bind(this);
+        this.handleSort = this.handleSort.bind(this);
     }
 
     componentDidMount() {
@@ -55,11 +55,10 @@ export default class Table extends Component {
         });
     }
 
-    handleSortByName(e, type) {
-        const sorted = sortBy([{ type }], this.state.data);
+    handleSort(e) {
+        const sorted = sortBy([e.target.value], this.state.data);
 
         if (isEqual(sorted, this.state.data)) {
-            console.log('yes');
             this.setState({
                 data: sorted.reverse(),
             });
@@ -68,7 +67,6 @@ export default class Table extends Component {
                 data: sorted,
             });
         }
-
         e.preventDefault();
     }
 
@@ -83,10 +81,11 @@ export default class Table extends Component {
                     <b>Total: </b> {this.state.total}
                 </div>
 
-                <button onClick={e => this.handleSortByName(e, 'name')}>Sort by name</button>
-                <button onClick={e => this.handleSortByName(e, 'category')}>Sort by category</button>
-                <button onClick={e => this.handleSortByName(e, 'account')}>Sort by account</button>
-                <button onClick={e => this.handleSortByName(e, 'amount')}>Sort by amount</button>
+                <Select
+                    label="Sort by"
+                    options={['name', 'category', 'account', 'amount']}
+                    selectOnChangeHandler={e => this.handleSort(e)}
+                />
 
                 <table>
                     <tbody>
