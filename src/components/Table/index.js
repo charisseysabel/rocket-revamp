@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { sortBy, isEqual } from 'lodash/fp';
 import axios from 'axios';
 import Form, { Select } from '../Form';
 
@@ -15,7 +14,6 @@ export default class Table extends Component {
 
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
         this.handleEditItem = this.handleEditItem.bind(this);
-        this.handleSort = this.handleSort.bind(this);
     }
 
     handleRemoveItem(e, item) {
@@ -33,25 +31,11 @@ export default class Table extends Component {
         this.setState({
             itemToEdit: { ...item },
         });
-    }
-
-    handleSort(e) {
-        const sorted = sortBy([e.target.value], this.state.data);
-
-        if (isEqual(sorted, this.state.data)) {
-            this.setState({
-                data: sorted.reverse(),
-            });
-        } else {
-            this.setState({
-                data: sorted,
-            });
-        }
         e.preventDefault();
     }
 
     render() {
-        const { data, total } = this.props;
+        const { data, total, handleSort } = this.props;
 
         if (data.length === 0) {
             return <div>Loading...</div>;
@@ -66,7 +50,7 @@ export default class Table extends Component {
                 <Select
                     label="Sort by"
                     options={['name', 'category', 'account', 'amount']}
-                    selectOnChangeHandler={e => this.handleSort(e)}
+                    selectOnChangeHandler={handleSort}
                 />
 
                 <table>
@@ -88,7 +72,7 @@ export default class Table extends Component {
                     </tbody>
                 </table>
 
-                {this.props.itemToEdit !== undefined ? <Form data={{ ...this.state.itemToEdit }} /> : null}
+                {this.state.itemToEdit !== undefined ? <Form data={{ ...this.state.itemToEdit }} /> : null}
             </div>
         );
     }

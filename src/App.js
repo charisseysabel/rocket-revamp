@@ -1,8 +1,10 @@
 import axios from 'axios';
+import { sortBy, isEqual } from 'lodash/fp';
 import React, { Component } from 'react';
-import Form from './components/Form';
+import Form, { Select } from './components/Form';
 import Table from './components/Table';
 
+const URL = 'http://localhost:3001/api/add';
 
 class App extends Component {
     constructor(props) {
@@ -11,6 +13,8 @@ class App extends Component {
             data: [],
             total: 0,
         };
+
+        this.handleSort = this.handleSort.bind(this);
     }
 
     componentDidMount() {
@@ -31,13 +35,32 @@ class App extends Component {
             });
     }
 
+    handleSort(e) {
+        const sorted = sortBy([e.target.value], this.state.data);
+        console.log('sorting!');
+        if (isEqual(sorted, this.state.data)) {
+            this.setState({
+                data: sorted.reverse(),
+            });
+        } else {
+            this.setState({
+                data: sorted,
+            });
+        }
+        e.preventDefault();
+    }
+
     render() {
         const { data, total } = this.state;
+        const tableProps = {
+            data,
+            total,
+        };
 
         return (
             <div>
                 <Form data={data} />
-                <Table data={data} total={total} />
+                <Table {...tableProps} handleSort={this.handleSort} />
             </div>
         );
     }
