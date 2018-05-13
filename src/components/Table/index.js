@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { map, sortBy, isEqual } from 'lodash/fp';
+import { sortBy, isEqual } from 'lodash/fp';
 import axios from 'axios';
-import Form, { Input, Select } from '../Form';
+import Form, { Select } from '../Form';
 
-const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
-const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
 
 export default class Table extends Component {
     constructor(props) {
@@ -18,24 +16,6 @@ export default class Table extends Component {
         this.handleRemoveItem = this.handleRemoveItem.bind(this);
         this.handleEditItem = this.handleEditItem.bind(this);
         this.handleSort = this.handleSort.bind(this);
-    }
-
-    componentDidMount() {
-        axios
-            .get(URL)
-            .then(res => {
-                const total = res.data.reduce(function(acc, curr) {
-                    return acc + curr.amount;
-                }, 0);
-
-                this.setState({
-                    data: [...res.data],
-                    total,
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
     }
 
     handleRemoveItem(e, item) {
@@ -71,14 +51,16 @@ export default class Table extends Component {
     }
 
     render() {
-        if (this.state.data.length === 0) {
+        const { data, total } = this.props;
+
+        if (data.length === 0) {
             return <div>Loading...</div>;
         }
 
         return (
             <div>
                 <div>
-                    <b>Total: </b> {this.state.total}
+                    <b>Total: </b> {total}
                 </div>
 
                 <Select
@@ -89,7 +71,7 @@ export default class Table extends Component {
 
                 <table>
                     <tbody>
-                        {this.state.data.map(item => {
+                        {data.map(item => {
                             return (
                                 <tr key={item['_id']}>
                                     <td>{item['name']}</td>
@@ -106,7 +88,7 @@ export default class Table extends Component {
                     </tbody>
                 </table>
 
-                {this.state.itemToEdit != undefined ? <Form data={{ ...this.state.itemToEdit }} /> : null}
+                {this.props.itemToEdit !== undefined ? <Form data={{ ...this.state.itemToEdit }} /> : null}
             </div>
         );
     }
