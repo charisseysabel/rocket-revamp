@@ -55,9 +55,9 @@ export default class Table extends Component {
 
                 <table>
                     <tbody>
-                        {data.map(item => {
+                        {data.map((item, i) => {
                             return (
-                                <tr key={item['_id']}>
+                                <tr key={item['_id'] || i}>
                                     <td>{item['name']}</td>
                                     <td>{item['category']}</td>
                                     <td>{item['account']}</td>
