@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { map } from 'lodash/fp';
-import axios, { post } from 'axios';
 
 const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
@@ -8,26 +7,17 @@ const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
 export default class Form extends Component {
     constructor(props) {
         super(props);
-        this.state = { ...props.data };
+        this.state = {
+            name: '',
+            category: '',
+            account: '',
+            amount: '',
+        };
 
-        this.handleOnSubmit = this.handleOnSubmit.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleAccountChange = this.handleAccountChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
-    }
-
-    handleOnSubmit(e) {
-        post(URL, {
-            ...this.state,
-        })
-            .then(function(res) {
-                console.log(res);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-        e.preventDefault();
     }
 
     handleNameChange(e) {
@@ -56,10 +46,11 @@ export default class Form extends Component {
 
     render() {
         const { name, category, account, amount } = this.state;
+        const { handleOnSubmit } = this.props;
 
         return (
             <div>
-                <form onSubmit={e => this.handleOnSubmit(e)}>
+                <form onSubmit={e => handleOnSubmit(e, { ...this.state })}>
                     <div>
                         <Input
                             type="text"
@@ -98,9 +89,7 @@ export default class Form extends Component {
                         />
                     </div>
 
-                    <button type="submit" onSubmit={e => this.handleOnSubmit(e)}>
-                        Submit
-                    </button>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         );

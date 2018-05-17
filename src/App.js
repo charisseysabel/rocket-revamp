@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { sortBy, isEqual } from 'lodash/fp';
 import React, { Component } from 'react';
-import Form, { Select } from './components/Form';
+import Form from './components/Form';
 import Table from './components/Table';
 
 const URL = 'http://localhost:3001/api/add';
@@ -15,6 +15,7 @@ class App extends Component {
         };
 
         this.handleSort = this.handleSort.bind(this);
+        this.handleOnSubmit = this.handleOnSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -37,7 +38,6 @@ class App extends Component {
 
     handleSort(e) {
         const sorted = sortBy([e.target.value], this.state.data);
-        console.log('sorting!');
         if (isEqual(sorted, this.state.data)) {
             this.setState({
                 data: sorted.reverse(),
@@ -50,6 +50,26 @@ class App extends Component {
         e.preventDefault();
     }
 
+    handleOnSubmit(e, item) {
+        axios
+            .post(URL, {
+                ...item,
+            })
+            .then(res => {
+                this.setState(prevState => {
+                    return {
+                        data: [...prevState.data, item],
+                        total: prevState.total,
+                    };
+                });
+                console.log(res);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+        e.preventDefault();
+    }
+
     render() {
         const { data, total } = this.state;
         const tableProps = {
@@ -59,7 +79,7 @@ class App extends Component {
 
         return (
             <div>
-                <Form data={data} />
+                <Form data={data} handleOnSubmit={this.handleOnSubmit} />
                 <Table {...tableProps} handleSort={this.handleSort} />
             </div>
         );
