@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { sortBy, isEqual } from 'lodash/fp';
 import React, { Component } from 'react';
+import { ADD } from './api';
+
 import Form from './components/Form';
 import Table from './components/Table';
-
-const URL = 'http://localhost:3001/api/add';
 
 class App extends Component {
     constructor(props) {
@@ -20,7 +20,7 @@ class App extends Component {
 
     componentDidMount() {
         axios
-            .get(URL)
+            .get(ADD)
             .then(res => {
                 const total = res.data.reduce(function(acc, curr) {
                     return acc + curr.amount;
@@ -52,7 +52,7 @@ class App extends Component {
 
     handleOnSubmit(e, item) {
         axios
-            .post(URL, {
+            .post(ADD, {
                 ...item,
             })
             .then(res => {

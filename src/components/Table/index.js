@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { ADD } from '../../api';
 import Form, { Select } from '../Form';
-
 
 export default class Table extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ export default class Table extends Component {
     handleRemoveItem(e, item) {
         axios({
             method: 'delete',
-            url: URL,
+            url: ADD,
             data: {
                 _id: item['_id'],
             },
