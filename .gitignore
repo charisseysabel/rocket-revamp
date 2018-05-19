@@ -21,3 +21,17 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode
+
+# older components not part of this project
+# but I want to save
+/src/components/Board
+/src/components/Checkbox
+/src/components/Column
+/src/components/ColumnItem
+
+# dummy data
+expenses.csv
+src/data/result.json
+
+# mongo DB instance
+mongoCredentials.js
