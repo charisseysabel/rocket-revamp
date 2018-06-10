@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { ADD } from '../../api';
 import Form, { Select } from '../Form';
 
 export default class Table extends Component {
@@ -12,19 +10,7 @@ export default class Table extends Component {
             itemToEdit: undefined,
         };
 
-        this.handleRemoveItem = this.handleRemoveItem.bind(this);
         this.handleEditItem = this.handleEditItem.bind(this);
-    }
-
-    handleRemoveItem(e, item) {
-        axios({
-            method: 'delete',
-            url: ADD,
-            data: {
-                _id: item['_id'],
-            },
-        });
-        e.preventDefault();
     }
 
     handleEditItem(e, item) {
@@ -35,7 +21,7 @@ export default class Table extends Component {
     }
 
     render() {
-        const { data, total, handleSort } = this.props;
+        const { data, total, handleSort, handleRemove } = this.props;
         const dataWithNiceDates = data.map(item => {
             const dateItem = new Date(item['date']);
             const dateString = dateItem.getFullYear() + '-' + (dateItem.getMonth() + 1) + '-' + dateItem.getDate();
@@ -73,7 +59,7 @@ export default class Table extends Component {
                                     <td>{item['account']}</td>
                                     <td>{item['amount']}</td>
                                     <td>
-                                        <button onClick={e => this.handleRemoveItem(e, item)}>Remove</button>
+                                        <button onClick={e => handleRemove(e, item)}>Remove</button>
                                         <button onClick={e => this.handleEditItem(e, item)}>Edit</button>
                                     </td>
                                 </tr>

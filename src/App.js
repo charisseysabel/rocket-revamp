@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sortBy, isEqual } from 'lodash/fp';
+import { sortBy, isEqual, filter } from 'lodash/fp';
 import React, { Component } from 'react';
 import { ADD } from './api';
 
@@ -16,6 +16,7 @@ class App extends Component {
 
         this.handleSort = this.handleSort.bind(this);
         this.handleOnSubmit = this.handleOnSubmit.bind(this);
+        this.handleRemoveItem = this.handleRemoveItem.bind(this);
     }
 
     componentDidMount() {
@@ -67,6 +68,19 @@ class App extends Component {
             .catch(function(err) {
                 console.log(err);
             });
+
+    handleRemoveItem(e, item) {
+        const newData = filter(o => o._id !== item['_id'], this.state.data);
+        this.setState({
+            data: newData,
+        });
+        axios({
+            method: 'delete',
+            url: ADD,
+            data: {
+                _id: item['_id'],
+            },
+        });
         e.preventDefault();
     }
 
@@ -80,7 +94,7 @@ class App extends Component {
         return (
             <div>
                 <Form data={data} handleOnSubmit={this.handleOnSubmit} />
-                <Table {...tableProps} handleSort={this.handleSort} />
+                <Table {...tableProps} handleSort={this.handleSort} handleRemove={this.handleRemoveItem} />
             </div>
         );
     }
