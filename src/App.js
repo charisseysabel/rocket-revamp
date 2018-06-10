@@ -71,9 +71,10 @@ class App extends Component {
 
     handleRemoveItem(e, item) {
         const newData = filter(o => o._id !== item['_id'], this.state.data);
-        this.setState({
+        this.setState(prevState => ({
             data: newData,
-        });
+            total: prevState.total - item.amount,
+        }));
         axios({
             method: 'delete',
             url: ADD,
