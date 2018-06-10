@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { map } from 'lodash/fp';
-import DayPicker from 'react-day-picker';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 
