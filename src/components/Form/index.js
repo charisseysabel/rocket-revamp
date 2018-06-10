@@ -1,5 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { map } from 'lodash/fp';
+import DayPicker from 'react-day-picker';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 
 const CATEGORY_OPTIONS = ['none', 'grocery', 'auto', 'clothing', 'transportation'];
 const ACCOUNT_OPTIONS = ['none', 'cash', 'checkingAccount', 'credit'];
@@ -12,12 +15,14 @@ export default class Form extends Component {
             category: '',
             account: '',
             amount: '',
+            date: '',
         };
 
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleAccountChange = this.handleAccountChange.bind(this);
         this.handleAmountChange = this.handleAmountChange.bind(this);
+        this.handleDayChange = this.handleDayChange.bind(this);
     }
 
     handleNameChange(e) {
@@ -41,6 +46,12 @@ export default class Form extends Component {
     handleAmountChange(e) {
         this.setState({
             amount: e.target.value,
+        });
+    }
+
+    handleDayChange(day) {
+        this.setState({
+            date: day,
         });
     }
 
@@ -87,6 +98,11 @@ export default class Form extends Component {
                             value={amount || ''}
                             onChange={e => this.handleAmountChange(e)}
                         />
+                    </div>
+
+                    <div>
+                        Date
+                        <DayPickerInput onDayChange={day => this.handleDayChange(day)} />
                     </div>
 
                     <button type="submit">Submit</button>

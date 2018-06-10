@@ -36,6 +36,15 @@ export default class Table extends Component {
 
     render() {
         const { data, total, handleSort } = this.props;
+        const dataWithNiceDates = data.map(item => {
+            const dateItem = new Date(item['date']);
+            const dateString = dateItem.getFullYear() + '-' + (dateItem.getMonth() + 1) + '-' + dateItem.getDate();
+
+            return {
+                ...item,
+                date: dateString,
+            };
+        });
 
         if (data.length === 0) {
             return <div>Loading...</div>;
@@ -49,15 +58,16 @@ export default class Table extends Component {
 
                 <Select
                     label="Sort by"
-                    options={['name', 'category', 'account', 'amount']}
+                    options={['name', 'category', 'account', 'amount', 'date']}
                     selectOnChangeHandler={handleSort}
                 />
 
                 <table>
                     <tbody>
-                        {data.map((item, i) => {
+                        {dataWithNiceDates.map((item, i) => {
                             return (
                                 <tr key={item['_id'] || i}>
+                                    <td>{item['date']}</td>
                                     <td>{item['name']}</td>
                                     <td>{item['category']}</td>
                                     <td>{item['account']}</td>

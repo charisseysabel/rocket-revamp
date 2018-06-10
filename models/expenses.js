@@ -6,6 +6,7 @@ var ExpenseSchema = new Schema({
     category: String,
     account: String,
     amount: Number,
+    date: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model('Expense', ExpenseSchema);
