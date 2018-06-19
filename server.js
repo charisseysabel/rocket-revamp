@@ -3,7 +3,9 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var MONGO_ENV = require('./mongoCredentials');
 
+// models
 var Expense = require('./models/expenses');
+var Budget = require('./models/budget');
 
 var app = express();
 var router = express.Router();
@@ -25,14 +27,6 @@ app.use(function(req, res, next) {
     );
     res.setHeader('Cache-Control', 'no-cache');
     next();
-});
-
-router.get('/', function(req, res) {
-    res.json({ message: 'yyaay' });
-});
-
-router.get('/test', function(req, res) {
-    res.json({ message: 'poop' });
 });
 
 router
@@ -71,6 +65,13 @@ router
             res.json({ message: 'item has been deleted successfully!' });
         });
     });
+
+router.route('/budget').get(function(req, res) {
+    Budget.find({}, function(err, budgets) {
+        if (err) res.send(err);
+        res.json(budgets);
+    });
+});
 
 app.use('/api', router);
 
