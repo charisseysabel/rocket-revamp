@@ -66,12 +66,24 @@ router
         });
     });
 
-router.route('/budget').get(function(req, res) {
-    Budget.find({}, function(err, budgets) {
-        if (err) res.send(err);
-        res.json(budgets);
+router
+    .route('/budget')
+    .get(function(req, res) {
+        Budget.find({}, function(err, budgets) {
+            if (err) res.send(err);
+            res.json(budgets);
+        });
+    })
+    .post(function(req, res) {
+        var budget = new Budget();
+        budget.name = req.body.budget;
+        budget.amount = req.body.amount;
+
+        budget.save(function(err) {
+            if (err) res.send(err);
+            res.json({ message: 'Budget added!' });
+        });
     });
-});
 
 app.use('/api', router);
 
