@@ -1,54 +1,50 @@
-import React, { Component, Fragment } from 'react';
-import { map } from 'lodash/fp';
-import axios from 'axios';
-import './index.css';
+import React, { Fragment } from 'react';
+import Budget from './presenter';
 
-import { BUDGET } from '../../api';
+const CREATE_BUDGET_DIALOG = 'create-budget-dialog';
 
-export default class Budget extends Component {
-    constructor() {
-        super();
-        this.state = { budget: [] };
-    }
-    componentDidMount() {
-        axios
-            .get(BUDGET)
-            .then(res => {
-                this.setState({
-                    budget: [...res.data],
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
+export default function Container() {
+    const dialog = document.getElementById(CREATE_BUDGET_DIALOG);
 
-    render() {
-        const { budget } = this.state;
+    const handleOpenModal = e => {
+        dialog.showModal();
+        e.preventDefault();
+    };
 
-        if (budget.length === 0) {
-            return (
-                <Fragment>
-                    <h1>Budget</h1>
-                    <p>No available data.</p>
-                </Fragment>
-            );
-        }
+    const handleCloseModal = e => {
+        dialog.close();
+        e.preventDefault();
+    };
 
-        return (
-            <Fragment>
-                <h1>Budget</h1>
+    return (
+        <Fragment>
+            <h1>Budget</h1>
+            <button onClick={e => handleOpenModal(e)}>Create new budget</button>
+            <Dialog handleClose={handleCloseModal} />
+            <Budget />
+        </Fragment>
+    );
+}
 
-                {map(
-                    item => (
-                        <section key={item['_id']} className="Budget-card">
-                            <h2>{item.name}</h2>
-                            <div>&euro; {item.amount}</div>
-                        </section>
-                    ),
-                    budget
-                )}
-            </Fragment>
-        );
-    }
+function Dialog({ handleClose }) {
+    return (
+        <dialog id={CREATE_BUDGET_DIALOG}>
+            <form>
+                <fieldset>
+                    <label htmlFor="budget">Budget Name</label>
+                    <input type="text" name="budget" id="budget" />
+
+                    <label htmlFor="amount">Amount</label>
+                    <input type="text" name="amount" id="amount" />
+                </fieldset>
+                <div>
+                    <button>Create Another</button>
+                </div>
+                <div>
+                    <button>Create</button>
+                </div>
+            </form>
+            <button onClick={e => handleClose(e)}>Cancel</button>
+        </dialog>
+    );
 }
