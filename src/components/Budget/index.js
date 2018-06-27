@@ -5,27 +5,65 @@ import Budget from './presenter';
 
 const CREATE_BUDGET_DIALOG = 'create-budget-dialog';
 
-export default function Container() {
-    const dialog = document.getElementById(CREATE_BUDGET_DIALOG);
+export default class Container extends Component {
+    constructor() {
+        super();
+        this.state = { budget: [] };
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
 
-    const handleOpenModal = e => {
-        dialog.showModal();
-        e.preventDefault();
-    };
+    componentDidMount() {
+        axios
+            .get(BUDGET)
+            .then(res => {
+                this.setState({
+                    budget: [...res.data],
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
-    const handleCloseModal = e => {
-        dialog.close();
-        e.preventDefault();
-    };
+    handleSubmit(e, item, handleClose) {
+        axios
+            .post(BUDGET, {
+                ...item,
+            })
+            .then(res => {
+                this.setState({
+                    budget: res.data,
+                });
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+        handleClose(e);
+    }
 
-    return (
-        <Fragment>
-            <h1>Budget</h1>
-            <button onClick={e => handleOpenModal(e)}>Create new budget</button>
-            <Dialog handleClose={handleCloseModal} />
-            <Budget />
-        </Fragment>
-    );
+    render() {
+        const dialog = document.getElementById(CREATE_BUDGET_DIALOG);
+        const { budget } = this.state;
+
+        const handleOpenModal = e => {
+            dialog.showModal();
+            e.preventDefault();
+        };
+
+        const handleCloseModal = e => {
+            dialog.close();
+            e.preventDefault();
+        };
+
+        return (
+            <Fragment>
+                <h1>Budget</h1>
+                <button onClick={e => handleOpenModal(e)}>Create new budget</button>
+                <Dialog handleClose={handleCloseModal} handleSubmit={this.handleSubmit} />
+                <Budget budget={budget} />
+            </Fragment>
+        );
+    }
 }
 
 class Dialog extends Component {
@@ -35,22 +73,7 @@ class Dialog extends Component {
             budget: '',
             amount: '',
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleSubmit(e, item) {
-        axios
-            .post(BUDGET, {
-                ...item,
-            })
-            .then(res => {
-                console.log(res);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
-        e.preventDefault();
     }
 
     handleChange(e, type) {
@@ -63,10 +86,10 @@ class Dialog extends Component {
 
     render() {
         const { budget, amount } = this.state;
-        const { handleClose } = this.props;
+        const { handleClose, handleSubmit } = this.props;
         return (
             <dialog id={CREATE_BUDGET_DIALOG}>
-                <form onSubmit={e => this.handleSubmit(e, { ...this.state })}>
+                <form onSubmit={e => handleSubmit(e, { ...this.state }, handleClose)}>
                     <fieldset>
                         <label htmlFor="budget">Budget Name</label>
                         <input
@@ -86,9 +109,7 @@ class Dialog extends Component {
                             onChange={e => this.handleChange(e, 'amount')}
                         />
                     </fieldset>
-                    <div>
-                        <button>Create Another</button>
-                    </div>
+
                     <div>
                         <button type="submit">Create</button>
                         <button onClick={e => handleClose(e)}>Cancel</button>
