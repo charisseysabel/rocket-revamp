@@ -2,6 +2,7 @@ import axios from 'axios';
 import { sortBy, isEqual, filter } from 'lodash/fp';
 import React, { Component } from 'react';
 import { ADD } from './api';
+import { isValidNumber } from './components/Form/validations';
 
 import Form from './components/Form';
 import Table from './components/Table';
@@ -52,22 +53,31 @@ class App extends Component {
     }
 
     handleOnSubmit(e, item) {
-        axios
-            .post(ADD, {
-                ...item,
-            })
-            .then(res => {
-                this.setState(prevState => {
-                    return {
-                        data: [...prevState.data, item],
-                        total: prevState.total,
-                    };
+        e.preventDefault();
+        if (isValidNumber(item.amount)) {
+            console.log('invalid number has been submitted!');
+            return;
+        } else {
+            axios
+                .post(ADD, {
+                    ...item,
+                })
+                .then(res => {
+                    const total = res.data.reduce(function(acc, curr) {
+                        return acc + curr.amount;
+                    }, 0);
+
+                    this.setState({
+                        data: res.data,
+                        total,
+                    });
+                    console.log(res);
+                })
+                .catch(function(err) {
+                    console.log(err);
                 });
-                console.log(res);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
+        }
+    }
 
     handleRemoveItem(e, item) {
         axios({
