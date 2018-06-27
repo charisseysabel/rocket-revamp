@@ -70,17 +70,21 @@ class App extends Component {
             });
 
     handleRemoveItem(e, item) {
-        const newData = filter(o => o._id !== item['_id'], this.state.data);
-        this.setState(prevState => ({
-            data: newData,
-            total: prevState.total - item.amount,
-        }));
         axios({
             method: 'delete',
             url: ADD,
             data: {
                 _id: item['_id'],
             },
+        }).then(res => {
+            const total = res.data.reduce(function(acc, curr) {
+                return acc + curr.amount;
+            }, 0);
+
+            this.setState({
+                data: res.data,
+                total,
+            });
         });
         e.preventDefault();
     }
