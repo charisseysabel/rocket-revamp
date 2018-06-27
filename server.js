@@ -81,7 +81,10 @@ router
 
         budget.save(function(err) {
             if (err) res.send(err);
-            res.json({ message: 'Budget added!' });
+            Budget.find({}, function(err, budgets) {
+                if (err) res.send(err);
+                res.json(budgets);
+            });
         });
     });
 
